@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: mixed-pr-review
+expected_outcome: |
+  差分を構造変更と振る舞い変更に分類し、リファクタリングに紛れた振る舞い変更（郵便番号 97 の離島追加、FREESHIP クーポン、checkout で legacyFee の 1.08 倍がなくなる、estimateDelivery の追加）を指摘し、構造変更 PR と振る舞い変更 PR に分ける具体案を review.md に書く。
+context:
+  scaffold_script: place-files.sh

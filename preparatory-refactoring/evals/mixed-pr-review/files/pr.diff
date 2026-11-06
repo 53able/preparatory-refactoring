@@ -1,0 +1,73 @@
+diff --git a/src/shipping.ts b/src/shipping.ts
+--- a/src/shipping.ts
++++ b/src/shipping.ts
+@@ -1,40 +1,52 @@
+-import { cfg } from "./config";
++import { cfg } from "./config";
++
++const FREE_SHIPPING_THRESHOLD = 5000;
++const EXPRESS_SURCHARGE = 800;
++const REMOTE_ISLAND_SURCHARGE = 1200;
+ 
+-export function shippingFee(order: any) {
+-  let fee;
+-  if (order) {
+-    if (order.items.length > 0) {
+-      // calculate subtotal
+-      let s = 0;
+-      for (const i of order.items) s += i.price * i.qty;
+-      if (s >= 5000) {
+-        fee = 0;
+-      } else {
+-        fee = cfg.baseFee;
+-      }
+-      if (order.express) fee = fee + 800;
+-      // remote islands
+-      if (order.zip.startsWith("90")) fee = fee + 1200;
+-      return fee;
+-    }
+-  }
+-  return 0;
++function subtotal(items: Item[]): number {
++  return items.reduce((s, i) => s + i.price * i.qty, 0);
++}
++
++function isRemoteIsland(zip: string): boolean {
++  return zip.startsWith("90") || zip.startsWith("97");
++}
++
++export function shippingFee(order: Order | undefined): number {
++  if (!order) return 0;
++  if (order.items.length === 0) return 0;
++
++  const s = subtotal(order.items);
++  let fee = s >= FREE_SHIPPING_THRESHOLD ? 0 : cfg.baseFee;
++  if (order.express) fee += EXPRESS_SURCHARGE;
++  if (isRemoteIsland(order.zip)) fee += REMOTE_ISLAND_SURCHARGE;
++  if (order.coupon === "FREESHIP") fee = 0;
++  return fee;
+ }
+ 
+-export function legacyFee(o: any) {
+-  return shippingFee(o) * 1.08;
+-}
++export function estimateDelivery(order: Order): number {
++  return isRemoteIsland(order.zip) ? 5 : 2;
++}
+diff --git a/src/types.ts b/src/types.ts
+--- a/src/types.ts
++++ b/src/types.ts
+@@ -1,3 +1,10 @@
++export interface Item { price: number; qty: number }
++export interface Order {
++  items: Item[];
++  express?: boolean;
++  zip: string;
++  coupon?: string;
++}
+diff --git a/src/checkout.ts b/src/checkout.ts
+--- a/src/checkout.ts
++++ b/src/checkout.ts
+@@ -10,7 +10,7 @@ export function checkout(order) {
+-  const fee = legacyFee(order);
++  const fee = shippingFee(order);

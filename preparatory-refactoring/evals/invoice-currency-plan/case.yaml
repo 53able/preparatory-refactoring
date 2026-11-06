@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: invoice-currency-plan
+expected_outcome: |
+  JPY 追加という次の変更を起点に、通貨ごとの分岐が billing/money.py・billing/invoice.py・report/monthly.py・api/schema.py に散在していることを git の同時変更や依存から示し、First/After/Later/Never の判断と、小さな構造変更を順に並べた計画（振る舞い変更とは分離）を plan.md に書く。コードは変更しない。
+context:
+  scaffold_script: place-files.sh

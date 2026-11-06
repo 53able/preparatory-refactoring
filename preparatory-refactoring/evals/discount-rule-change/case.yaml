@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: discount-rule-change
+expected_outcome: |
+  tier 4 で 20% 引きが実装され、既存テストと tier 4 のテストが通る。整理（構造変更）のコミットと振る舞い変更のコミットが分かれ、整理は tier 追加を楽にする範囲に留まる。summary.md に各コミットの内容が書かれる。
+context:
+  scaffold_script: place-files.sh
