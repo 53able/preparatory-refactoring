@@ -42,6 +42,8 @@ cp -R preparatory-refactoring/skills/preparatory-refactoring ~/.claude/skills/
 - 「この PR は refactor と feature が混ざっているので分け方を提案して」
 - 「技術的負債をどこから返すべきか」
 
+初めて使う場合は [クイックガイド](docs/quick-guide.md) を、計画の出力例は [docs/example-plan.md](docs/example-plan.md) を参照してください。
+
 ## 構成
 
 ```
@@ -58,6 +60,8 @@ skills/preparatory-refactoring/
 ```bash
 cd skills/preparatory-refactoring/scripts && uv run python -m unittest test_change_coupling
 ```
+
+評価ケースの実行方法とスキルを編集するときの約束は [CONTRIBUTING.md](CONTRIBUTING.md) にあります。
 
 ## ライセンス
 
