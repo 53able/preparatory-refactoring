@@ -39,7 +39,9 @@ cd skills/preparatory-refactoring
 claude plugin eval . --allow-tools Write,Edit,Bash --scaffold
 ```
 
-各ケースを skill あり / なしで実行し、レポートを `evals/results/` に書く。実際のモデル実行で課金される。`evals/results/` はコミットしない（リポジトリに `.gitignore` は無いので、手で除外すること）。
+各ケースを skill あり / なしで実行し、レポートを `evals/results/` に書く。実際のモデル実行で課金される。`evals/results/` は `.gitignore` で除外している。
+
+注意（macOS）: 評価のサンドボックス内では `/usr/bin/git`（xcrun 経由）が `Operation not permitted` で失敗する。Homebrew の git（`/opt/homebrew/bin/git`）は動いた（Claude Code 2.1.318 で確認）。git を使うケース（discount-rule-change のコミット、invoice-currency-plan の `change_coupling.py`）は、エージェントがこれに気付かないと失敗する。grader の判定役に渡る実行記録は途中が省略される（`[…N messages elided…]`）ので、原因を調べるときは `--keep-temp` を付けて `out/trace.jsonl` を読む。
 
 新しいケースを足すとき:
 
@@ -57,7 +59,7 @@ claude plugin eval . --allow-tools Write,Edit,Bash --scaffold
 - `SKILL.md` 手順番号（「手順 2a」「手順 4」「手順 5」）と D1〜D3 は `references/structure-and-diagnosis.md`、`references/timing-and-discipline.md`、`references/techniques.md` から参照されている。`techniques.md` 冒頭付近は D1〜D3 と手法 M3 / M5 / M11 / M13 の対応を書いている。
 - 手法番号 M1〜M22 は `techniques.md` の見出しが定義で、`SKILL.md` は「M1〜M22」の範囲を書いている。手法を増減したらこの範囲も直す。
 - `SKILL.md` の計画テンプレートの固定文言（「該当なし（構造改善なし）」「なし判定:」）は `timing-and-discipline.md` にも書かれている。片方だけ変えない。
-- evals の grader は、テンプレートの表名と固定文言を参照していない（`graders/` を grep して確認）。例外として `invoice-currency-plan/graders/07-assertion.md` はテンプレートの項目名「停止条件」を使う。依存先は次の 2 つ。
+- evals の grader は、テンプレートの表名と固定文言を参照していない（`graders/` を grep して確認）。例外として `invoice-currency-plan/graders/06-assertion.md` はテンプレートの項目名「停止条件」を使う。依存先は次の 2 つ。
   - prompt が指定する成果物名（`plan.md` / `summary.md` / `review.md`）と、各ケースの入力ファイルの内容（tier の金額、郵便番号 `97`、`FREESHIP` など）。
   - `invoice-currency-plan` の grader 01 は「先に/後で/後日/やらない」、SKILL.md は「前/直後/後回し/しない」と書いており、語は一致していない。
 - `SKILL.md` の自己テスト記載（`uv run "$SKILL_DIR/scripts/test_change_coupling.py"`）と README の記載（`python -m unittest`）は書式が異なる。どちらを残すかは未確認。
