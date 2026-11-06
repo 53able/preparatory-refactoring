@@ -253,7 +253,7 @@ class ChangeCouplingTest(unittest.TestCase):
         data = self.json_run("--partner", "a.py", "--path", "sub/")
         comp = [c["path"] for c in self.partner_of(data, "a.py")["companions"]]
         self.assertEqual(comp, ["sub/f.py"])
-        data = self.json_run("--partner", "a.py", "--since", "2024-03-05")
+        data = self.json_run("--partner", "a.py", "--since", "2024-03-05T00:00:00+00:00")
         p = self.partner_of(data, "a.py")
         self.assertEqual(p["commits"], 2)  # a 単独 と a+f
         data = self.json_run("--partner", "a.py", "--top", "1")
